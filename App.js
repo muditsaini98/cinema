@@ -5,6 +5,7 @@ import HomeScreen from "./Screens/HomeScreen";
 import MovieScreens from "./Screens/MovieScreens";
 import Video from "./Screens/Video";
 import SearchScreen from "./Screens/SearchScreen";
+import SeasonScreen from "./Screens/SeasonScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ export default function App() {
         <Stack.Screen name="Movie" component={MovieScreens} />
         <Stack.Screen name="Video" component={Video} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Seasons" component={SeasonScreen} />
       </Stack.Navigator>
       <StatusBar backgroundColor="black" style="light" />
     </NavigationContainer>

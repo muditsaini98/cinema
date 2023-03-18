@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MovieScreens = ({ navigation, route }) => {
   const { item, image_base_url, base_URL, API_KEY } = route.params;
-  console.log(item)
+  // console.log(item)
   const [details, setDetails] = useState([]);
   const [recoMovies, setRecoMovies] = useState([]);
   const movieDetail = `${base_URL}/movie/${item?.id}?api_key=${API_KEY}&language=en-US&page=1`;
@@ -60,19 +60,19 @@ const MovieScreens = ({ navigation, route }) => {
       {
         item?.media_type === "movie" || item?.media_type === undefined
           ? await fetch(movieDetail)
-              .then((response) => response.json())
-              .then((data) => {
-                setDetails(data);
-                // console.log(data)
-              })
-              .catch((err) => console.log(err))
+            .then((response) => response.json())
+            .then((data) => {
+              setDetails(data);
+              // console.log(data)
+            })
+            .catch((err) => console.log(err))
           : await fetch(tvDetail)
-              .then((response) => response.json())
-              .then((data) => {
-                setDetails(data);
-                // console.log(data);
-              })
-              .catch((err) => console.log(err));
+            .then((response) => response.json())
+            .then((data) => {
+              setDetails(data);
+              // console.log(data);
+            })
+            .catch((err) => console.log(err));
       }
     }
     fetchUrl();
@@ -83,18 +83,18 @@ const MovieScreens = ({ navigation, route }) => {
       {
         item?.media_type === "movie" || item?.media_type === undefined
           ? await fetch(recomendedMovies)
-              .then((response) => response.json())
-              .then((data) => {
-                setRecoMovies(data?.results);
-              })
-              .catch((err) => console.log(err))
+            .then((response) => response.json())
+            .then((data) => {
+              setRecoMovies(data?.results);
+            })
+            .catch((err) => console.log(err))
           : await fetch(recomendedTv)
-              .then((response) => response.json())
-              .then((data) => {
-                setRecoMovies(data?.results);
-                // console.log(data)
-              })
-              .catch((err) => console.log(err));
+            .then((response) => response.json())
+            .then((data) => {
+              setRecoMovies(data?.results);
+              // console.log(data)
+            })
+            .catch((err) => console.log(err));
       }
     }
     fetchUrl();
@@ -102,6 +102,15 @@ const MovieScreens = ({ navigation, route }) => {
 
   const play = async (item) => {
     navigation.navigate("Video", { item, details });
+    try {
+      await AsyncStorage.setItem("m_name", JSON.stringify(item));
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
+  };
+  const seasons = async (item) => {
+    navigation.navigate("Seasons", { item, details, base_URL, API_KEY });
     try {
       await AsyncStorage.setItem("m_name", JSON.stringify(item));
     } catch (e) {
@@ -245,9 +254,11 @@ const MovieScreens = ({ navigation, route }) => {
           </View>
         )}
       </View>
-      <View style={{ width: 100 }}>
+      {item?.media_type !== "tv" ? <View style={{ width: 100 }}>
         <Button title="Play" onPress={() => play(item)} />
-      </View>
+      </View> : <View style={{ width: 100 }}>
+        <Button title="Seasons" onPress={() => seasons(item)} />
+      </View>}
       <Text
         style={{
           color: "white",
