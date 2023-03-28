@@ -59,36 +59,6 @@ export default function HomeScreen({ navigation, route }) {
     ab();
   }, []);
 
-  // useEffect(() => {
-  //   function modal() {
-  //     return (
-  //       <Modal
-  //         animationType="slide"
-  //         transparent={true}
-  //         visible={modalVisible}
-  //         onRequestClose={() => {
-  //           Alert.alert("Modal has been closed.");
-  //           setModalVisible(!modalVisible);
-  //         }}
-  //       >
-  //         <View style={styles.centeredView}>
-  //           <View style={styles.modalView}>
-  //             <Text style={styles.modalText}>Hello World!</Text>
-  //             <Pressable
-  //               style={[styles.button, styles.buttonClose]}
-  //               onPress={() => setModalVisible(!modalVisible)}
-  //             >
-  //               <Text style={styles.textStyle}>Hide Modal</Text>
-  //             </Pressable>
-  //           </View>
-  //         </View>
-  //         <Text>ddsgds</Text>
-  //       </Modal>
-  //     );
-  //   };
-  //   modal();
-  // }, []);
-
   const onPressSearch = () => {
     navigation.navigate("Search", { base_URL, API_KEY, image_base_url });
   };
@@ -118,7 +88,7 @@ export default function HomeScreen({ navigation, route }) {
     });
   }, [navigation]);
 
-  onPressFunction = (item) => {
+  const onPressFunction = (item) => {
     navigation.push("Movie", {
       item,
       width,
@@ -128,6 +98,20 @@ export default function HomeScreen({ navigation, route }) {
     });
   };
 
+  const goToFlim = () => {
+    navigation.push("Film", {image_base_url, base_URL, API_KEY})
+  }
+  
+  const goToSeries = () => {
+    navigation.push("Series", {image_base_url, base_URL, API_KEY})
+    
+  }
+  
+  const goToMyList = () => {
+    navigation.push("List", {image_base_url, base_URL, API_KEY})
+
+  }
+
   return (
     <ScrollView
       contentContainerStyle={styles.contentContainer}
@@ -135,7 +119,13 @@ export default function HomeScreen({ navigation, route }) {
       showsVerticalScrollIndicator={false}
       style={styles.container}
     >
+      <View style={{ flexDirection: "row", maxWidth: Dimensions.get("window").width - 20, justifyContent: "space-evenly", paddingVertical: 10 }}>
+        <Pressable onPress={() => goToFlim()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>Film</Text></Pressable>
+        <Pressable onPress={() => goToSeries()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>Series</Text></Pressable>
+        <Pressable onPress={() => goToMyList()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>My List</Text></Pressable>
+      </View>
       <View>
+        {/* <Text style={{color: "white", fontSize: 20, fontWeight: "600", marginVertical: 5}}>Trending Now</Text> */}
         <FlatList
           horizontal={true}
           data={movies}
@@ -161,9 +151,9 @@ export default function HomeScreen({ navigation, route }) {
       <NowPlay navigation={navigation} title="top action" genre="28" />
       <NowPlay navigation={navigation} title="top Comedy" genre="35" />
       <NowPlay navigation={navigation} title="top animation" genre="16" />
-      <NowPlay navigation={navigation} title="top romance" genre="10749" />
-      <NowPlay navigation={navigation} title="top horror" genre="27" />
       <NowPlay navigation={navigation} title="top sci-Fi" genre="878" />
+      <NowPlay navigation={navigation} title="top horror" genre="27" />
+      <NowPlay navigation={navigation} title="top romance" genre="10749" />
       {localValue && (
         <Modal
           animationType="slide"
@@ -212,7 +202,13 @@ export default function HomeScreen({ navigation, route }) {
                       <Button
                         title="Continue"
                         onPress={() => {
-                          navigation.navigate("Video", { localValue });
+                          navigation.navigate("Movie", {
+                            item: localValue,
+                            width,
+                            image_base_url,
+                            base_URL,
+                            API_KEY,
+                          });
                         }}
                       />
                     </View>
@@ -221,7 +217,7 @@ export default function HomeScreen({ navigation, route }) {
                         title="Close"
                         onPress={() => {
                           setModalVisible(!modalVisible);
-                          // AsyncStorage.removeItem("m_name")
+                          AsyncStorage.removeItem("m_name")
                         }}
                       />
                     </View>

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { Dimensions, Pressable, ScrollView, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Text } from 'react-native'
 
 const SeasonScreen = ({ navigation, route }) => {
     const { item, details, base_URL, API_KEY } = route.params;
     // console.log("item", item)
-    console.log("details", details)
+    // console.log("details", details)
 
-    const seasonsDetail = `${base_URL}/tv/${item?.id}/season/1?api_key=${API_KEY}&language=en-US&page=1`;
     const [seasons, setSeasons] = useState([])
+    const [seasonsNo, setSeasonsNo] = useState(1)
+    const seasonsDetail = `${base_URL}/tv/${item?.id}/season/${seasonsNo}?api_key=${API_KEY}&language=en-US&page=1`;
     useEffect(() => {
         async function fetchUrl() {
             await fetch(seasonsDetail)
@@ -20,48 +21,60 @@ const SeasonScreen = ({ navigation, route }) => {
                 .catch((err) => console.log(err));
         }
         fetchUrl()
-    }, [])
+    }, [seasonsNo])
+
+    const seasonChange = (season_number) => {
+        setSeasonsNo(season_number)
+    }
+
+    const episodeClick = (episode_number) => {
+        // setSeasonsNo(episode_number)
+        navigation.push("Server", { item, episode_number, seasonsNo })
+    }
 
     return (
         <View style={{ backgroundColor: 'black', height: "100%" }}>
-            <View style={{ marginBottom: 20 }}>
+            <View style={{ marginBottom: 20}}>
                 <Text style={[styles.light, { fontSize: 24, marginBottom: 20 }]}>Seasons</Text>
-                <ScrollView style={{}}
+                <ScrollView
+                // style={{flex: 1}}
                     horizontal
                     contentContainerStyle={styles.contentContainer}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}>
                     {details?.seasons?.map((item) => {
                         return (
-                            <>
-                                {item?.season_number !== 0 && <Pressable style={[styles.view, styles.light, { marginHorizontal: 5, borderWidth: 2, borderColor: "white", paddingVertical: 3, paddingHorizontal: 6, backgroundColor: "gray" }]} key={item.id}>
+                            <View key={item.id}>
+                                {item?.season_number !== 0 && <TouchableHighlight onPress={() => seasonChange(item?.season_number)} style={[styles.view, styles.light, { marginHorizontal: 5, borderWidth: 2, borderColor: "white", paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "rgb(100, 100, 100)", borderRadius: 8 }]} key={item.id}>
                                     <Text style={styles.light}>
                                         {item?.season_number}
                                     </Text>
-                                </Pressable>}
-                            </>
+                                </TouchableHighlight>}
+                            </View>
                         )
                     })}
                 </ScrollView>
             </View>
             <View>
                 <Text style={[styles.light, { fontSize: 24, marginBottom: 20 }]}>Episodes</Text>
-                <ScrollView style={{height: "100%"}}
+                <ScrollView style={{ height: "100%" }}
                     // horizontal
-                    contentContainerStyle={{alignItems: "center"}}
+                    contentContainerStyle={{ alignItems: "center" }}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}>
                     {seasons?.episodes?.map((item) => {
                         return (
-                                <Pressable style={[styles.view, styles.light, {marginVertical: 6, width: "100%", borderWidth: 2, borderColor: "white", paddingVertical: 5, backgroundColor: "gray", maxWidth: Dimensions.get("window").width - 30 }]} key={item.id}>
-                                    <Text style={[styles.light, {textAlign: "center", paddingBottom: 10, fontSize: 18, fontWeight: "700"}]}>
+                            <TouchableHighlight onPress={() => episodeClick(item?.episode_number)} style={[styles.view, styles.light, { marginVertical: 6, width: "100%", borderWidth: 2, borderColor: "white", paddingVertical: 5, backgroundColor: "rgb(100, 100, 100)", maxWidth: Dimensions.get("window").width - 30, borderRadius: 8 }]} key={item.id}>
+                                <>
+                                    <Text style={[styles.light, { textAlign: "center", paddingBottom: 10, fontSize: 18, fontWeight: "700" }]}>
                                         {item?.episode_number}
                                     </Text>
-                                    <Text style={[styles.light, {textAlign: "center", fontSize: 15}]}>{item?.name}</Text>
-                                </Pressable>
+                                    <Text style={[styles.light, { textAlign: "center", fontSize: 15 }]}>{item?.name}</Text>
+                                </>
+                            </TouchableHighlight>
                         )
                     })}
-                    <View style={{height: 150}}></View>
+                    <View style={{ height: 150 }}></View>
                 </ScrollView>
             </View>
         </View>
@@ -74,7 +87,8 @@ const styles = StyleSheet.create({
     contentContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        flex: 1,
+        // flex: 1,
+        flexGrow: 1
     },
     light: {
         color: "white"

@@ -101,7 +101,7 @@ const MovieScreens = ({ navigation, route }) => {
   }, [navigation]);
 
   const play = async (item) => {
-    navigation.navigate("Video", { item, details });
+    navigation.navigate("Server", { item, details });
     try {
       await AsyncStorage.setItem("m_name", JSON.stringify(item));
     } catch (e) {
@@ -109,8 +109,9 @@ const MovieScreens = ({ navigation, route }) => {
       console.log(e);
     }
   };
+
   const seasons = async (item) => {
-    navigation.navigate("Seasons", { item, details, base_URL, API_KEY });
+    navigation.navigate("Seasons", { item, details, base_URL, API_KEY, image_base_url });
     try {
       await AsyncStorage.setItem("m_name", JSON.stringify(item));
     } catch (e) {
@@ -122,6 +123,12 @@ const MovieScreens = ({ navigation, route }) => {
   const onPressFunction = (item) => {
     navigation.push("Movie", { item, image_base_url, base_URL, API_KEY });
   };
+
+  const toHoursAndMinutes = (totalMinutes) => {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}h${minutes > 0 ? ` ${minutes}m        ` : ""}`;
+  }
 
   return (
     <ScrollView
@@ -183,20 +190,30 @@ const MovieScreens = ({ navigation, route }) => {
             color: "white",
             fontSize: 28,
             width: 260,
+            fontWeight: 600
           }}
         >
           {details?.name || details?.title}
         </Text>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", paddingTop: 5 }}
-        >
-          <Image
-            style={{ width: 10, height: 10 }}
-            source={require("../assets/rating.png")}
-          />
-          <Text style={[styles.white, { paddingLeft: 5 }]}>
-            {details?.vote_average?.toFixed(1)}
-          </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{ flexDirection: "row", alignItems: "center", paddingTop: 5, backgroundColor: "rgb(12, 20, 56)", justifyContent: "center", padding: 3, paddingHorizontal: 6, borderRadius: 5 }}
+          >
+            <Image
+              style={{ width: 10, height: 10 }}
+              source={require("../assets/rating.png")}
+            />
+            <Text style={[styles.white, { paddingLeft: 5 }]}>
+              {details?.vote_average?.toFixed(1)}
+            </Text>
+          </View>
+          <View style={{ marginLeft: 10 }}>
+            <Image
+              style={{ width: 15, height: 20 }}
+              tintColor={"white"}
+              source={require("../assets/bookmark.png")}
+            />
+          </View>
         </View>
       </View>
       <View>
@@ -215,9 +232,11 @@ const MovieScreens = ({ navigation, route }) => {
                   styles.white,
                   {
                     marginRight: 10,
-                    padding: 6,
+                    padding: 3,
+                    paddingHorizontal: 6,
+                    fontWeight: "600",
                     flexWrap: "wrap",
-                    borderWidth: 2,
+                    // borderWidth: 2,
                     marginBottom: 15,
                     borderColor: "lightgray",
                     borderRadius: 3,
@@ -230,34 +249,51 @@ const MovieScreens = ({ navigation, route }) => {
             );
           })}
         </View>
-        {details?.episode_run_time?.length !== 0 && (
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingBottom: 20,
-            }}
-          >
-            <Image
-              style={{ width: 10, height: 10 }}
-              source={require("../assets/time.png")}
-            />
-            {item?.media_type === "movie" || item?.media_type === undefined ? (
-              <Text style={[styles.white, { paddingLeft: 5 }]}>
-                {details?.runtime} min
-              </Text>
-            ) : (
-              <Text style={[styles.white, { paddingLeft: 5 }]}>
-                {details?.episode_run_time} min per episode
-              </Text>
-            )}
-          </View>
-        )}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingBottom: 20,
+          }}
+        >
+          {details?.episode_run_time?.length !== 0 && (
+            <>
+              <Image
+                style={{ width: 10, height: 10 }}
+                source={require("../assets/time.png")}
+              />
+              {item?.media_type === "movie" || item?.media_type === undefined ? (
+                <Text style={[styles.white, { paddingLeft: 5 }]}>
+                  {/* {details?.runtime} min {"     "} */}
+                  {toHoursAndMinutes(details?.runtime)}
+                </Text>
+              ) : (
+                <Text style={[styles.white, { paddingLeft: 5 }]}>
+                  {details?.episode_run_time?.length > 1 ? details?.episode_run_time[0] : details?.episode_run_time} min per episode {"      "}
+                </Text>
+              )}
+            </>
+          )}
+          <Image
+            tintColor={"white"}
+            style={{ width: 10, height: 10 }}
+            source={require("../assets/calendar.png")}
+          />
+          {item?.media_type === "movie" || item?.media_type === undefined ? (
+            <Text style={[styles.white, { paddingLeft: 10 }]}>
+              {details?.release_date?.split("-")[0]}
+            </Text>
+          ) : (
+            <Text style={[styles.white, { paddingLeft: 10 }]}>
+              {details?.first_air_date?.split("-")[0] !== details?.last_air_date?.split("-")[0] ? details?.first_air_date?.split("-")[0] + " - " + details?.last_air_date?.split("-")[0] : details?.first_air_date?.split("-")[0]}
+            </Text>
+          )}
+        </View>
       </View>
       {item?.media_type !== "tv" ? <View style={{ width: 100 }}>
-        <Button title="Play" onPress={() => play(item)} />
+        <Button title="Play" color={"rgb(12, 20, 56)"} onPress={() => play(item)} />
       </View> : <View style={{ width: 100 }}>
-        <Button title="Seasons" onPress={() => seasons(item)} />
+        <Button title="Seasons" color={"rgb(12, 20, 56)"} onPress={() => seasons(item)} />
       </View>}
       <Text
         style={{

@@ -28,7 +28,7 @@ const NowPlay = ({title, genre, navigation}) => {
     fetchUrl();
   }, []);
 
-  onPressFunction = (item) => {
+  const onPressFunction = (item) => {
     navigation.push("Movie", {item, image_base_url, base_URL, API_KEY})
   };
 
@@ -66,7 +66,7 @@ const NowPlay = ({title, genre, navigation}) => {
 const styles = StyleSheet.create({
   title: {
     color: "white",
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "600",
   },
   img: {
