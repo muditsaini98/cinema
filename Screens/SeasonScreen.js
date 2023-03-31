@@ -45,7 +45,7 @@ const SeasonScreen = ({ navigation, route }) => {
                     {details?.seasons?.map((item) => {
                         return (
                             <View key={item.id}>
-                                {item?.season_number !== 0 && <TouchableHighlight onPress={() => seasonChange(item?.season_number)} style={[styles.view, styles.light, { marginHorizontal: 5, borderWidth: 2, borderColor: "white", paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "rgb(100, 100, 100)", borderRadius: 8 }]} key={item.id}>
+                                {item?.season_number !== 0 && <TouchableHighlight onPress={() => seasonChange(item?.season_number)} style={[styles.view, styles.light, { marginHorizontal: 5, paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "rgb(100, 100, 100)", borderRadius: 8 }]} key={item.id}>
                                     <Text style={styles.light}>
                                         {item?.season_number}
                                     </Text>
@@ -64,7 +64,7 @@ const SeasonScreen = ({ navigation, route }) => {
                     showsVerticalScrollIndicator={false}>
                     {seasons?.episodes?.map((item) => {
                         return (
-                            <TouchableHighlight onPress={() => episodeClick(item?.episode_number)} style={[styles.view, styles.light, { marginVertical: 6, width: "100%", borderWidth: 2, borderColor: "white", paddingVertical: 5, backgroundColor: "rgb(100, 100, 100)", maxWidth: Dimensions.get("window").width - 30, borderRadius: 8 }]} key={item.id}>
+                            <TouchableHighlight onPress={() => episodeClick(item?.episode_number)} style={[styles.view, styles.light, { marginVertical: 6, width: "100%", paddingVertical: 5, backgroundColor: "rgb(100, 100, 100)", maxWidth: Dimensions.get("window").width - 60, borderRadius: 8 }]} key={item.id}>
                                 <>
                                     <Text style={[styles.light, { textAlign: "center", paddingBottom: 10, fontSize: 18, fontWeight: "700" }]}>
                                         {item?.episode_number}

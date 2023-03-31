@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
   Button,
   Dimensions,
@@ -14,16 +14,24 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import arrayListContext from "../App"
 
 const MovieScreens = ({ navigation, route }) => {
   const { item, image_base_url, base_URL, API_KEY } = route.params;
   // console.log(item)
+
+  const arrList = useContext(arrayListContext);
+
   const [details, setDetails] = useState([]);
   const [recoMovies, setRecoMovies] = useState([]);
+  const [bookmark, setBookmark] = useState(false);
+  const [list, setList] = useState([]);
   const movieDetail = `${base_URL}/movie/${item?.id}?api_key=${API_KEY}&language=en-US&page=1`;
   const tvDetail = `${base_URL}/tv/${item?.id}?api_key=${API_KEY}&language=en-US&page=1`;
   const recomendedMovies = `${base_URL}/movie/${item?.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1`;
   const recomendedTv = `${base_URL}/tv/${item?.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1`;
+
+  console.log(arrList)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -130,6 +138,10 @@ const MovieScreens = ({ navigation, route }) => {
     return `${hours}h${minutes > 0 ? ` ${minutes}m        ` : ""}`;
   }
 
+  const onPressBookmark = async (item) => {
+    setBookmark(!bookmark)
+  }
+
   return (
     <ScrollView
       contentContainerStyle={styles.contentContainer}
@@ -207,13 +219,17 @@ const MovieScreens = ({ navigation, route }) => {
               {details?.vote_average?.toFixed(1)}
             </Text>
           </View>
-          <View style={{ marginLeft: 10 }}>
-            <Image
+          <Pressable onPress={() => onPressBookmark(item)} style={{ marginLeft: 10 }}>
+            {!bookmark ? <Image
               style={{ width: 15, height: 20 }}
               tintColor={"white"}
               source={require("../assets/bookmark.png")}
-            />
-          </View>
+            /> : <Image
+            style={{ width: 15, height: 20 }}
+            tintColor={"white"}
+            source={require("../assets/bookmark-full.png")}
+          />}
+          </Pressable>
         </View>
       </View>
       <View>

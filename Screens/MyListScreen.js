@@ -1,9 +1,11 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 
 const MyListScreen = () => {
   return (
-    <Text>MyListScreen</Text>
+    <View style={{backgroundColor: "black"}}>
+      <Text>MyListScreen</Text>
+    </View>
   )
 }
 

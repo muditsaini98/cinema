@@ -10,6 +10,7 @@ import ServerScreen from "./Screens/ServerScreen";
 import SeriesScreen from "./Screens/SeriesScreen";
 import FilmScreen from "./Screens/FilmScreen";
 import MyListScreen from "./Screens/MyListScreen";
+import React, { useState } from "react"
 
 const Stack = createNativeStackNavigator();
 
@@ -19,24 +20,29 @@ const globalScreenOptions = {
   headerTintColor: "white",
 };
 
+const arrayListContext = React.createContext();
+
 export default function App() {
+  const [arr, setArr] = useState([])
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={globalScreenOptions}
-      >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Movie" component={MovieScreens} />
-        <Stack.Screen name="Video" component={Video} />
-        <Stack.Screen name="Search" component={SearchScreen} />
-        <Stack.Screen name="Seasons" component={SeasonScreen} />
-        <Stack.Screen name="Server" component={ServerScreen} />
-        <Stack.Screen name="Series" component={SeriesScreen} />
-        <Stack.Screen name="Film" component={FilmScreen} />
-        <Stack.Screen name="List" component={MyListScreen} />
-      </Stack.Navigator>
-      <StatusBar backgroundColor="black" style="light" />
-    </NavigationContainer>
+    <arrayListContext.Provider value={[ arr, setArr ]}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={globalScreenOptions}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Movie" component={MovieScreens} />
+          <Stack.Screen name="Video" component={Video} />
+          <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="Seasons" component={SeasonScreen} />
+          <Stack.Screen name="Server" component={ServerScreen} />
+          <Stack.Screen name="Series" component={SeriesScreen} />
+          <Stack.Screen name="Film" component={FilmScreen} />
+          <Stack.Screen name="List" component={MyListScreen} />
+        </Stack.Navigator>
+        <StatusBar backgroundColor="black" style="light" />
+      </NavigationContainer>
+    </arrayListContext.Provider>
   );
 }
