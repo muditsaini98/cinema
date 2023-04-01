@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -13,28 +13,34 @@ import {
 
 const SearchScreen = ({ navigation, route }) => {
   const { base_URL, API_KEY, image_base_url } = route.params;
+  const flatListRef = useRef();
+
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [searchResults, setSearchResults] = useState([]);
-  const onChange = (e) => {
-    setSearch(
-      `${base_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${e}&page=1`
-    );
-  };
+  const searchURL = `${base_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${search}&page=${page}`
   useEffect(() => {
     async function fetchUrl() {
       search &&
-        (await fetch(search)
+        (await fetch(searchURL)
           .then((response) => response.json())
           .then((data) => {
             // console.log(data);
-            setSearchResults(data?.results);
+            // setSearchResults([...searchResults, ...data?.results]);
+            setSearchResults(data?.results)
           }));
     }
     fetchUrl();
-  }, [search]);
+  }, [search, page]);
 
   const onPressChange = (item) => {
     navigation.push("Movie", { item, image_base_url, base_URL, API_KEY });
+  };
+
+  const onChange = (e) => {
+    setSearch(e);
+    // console.log(e)
+    // console.log()
   };
 
   return (
@@ -49,6 +55,7 @@ const SearchScreen = ({ navigation, route }) => {
           borderWidth: 1,
           borderColor: "white",
         }}
+        // onChangeText={(e) => onChange(e)}
         onChangeText={(e) => onChange(e)}
         // value={search}
         placeholder="Search..."
@@ -57,19 +64,27 @@ const SearchScreen = ({ navigation, route }) => {
       <ScrollView
         horizontal
         //   contentContainerStyle={styles.contentContainer}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         style={{ width: "100%" }}
       >
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            maxWidth: Dimensions.get("window").width - 25,
-          }}
-        >
+        <View>
           <FlatList
+            contentContainerStyle={{ alignItems: "center" }}
+            style={{ paddingBottom: 50 }}
+            ref={flatListRef}
             //   horizontal={true}
+            onEndReached={async () => {
+              setPage(page + 1);
+              flatListRef?.current?.scrollToIndex({ animated: true, index: 0, viewPosition: 0 })
+              // await fetch(`${base_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${search}&page=${page + 1}`)
+              //   .then((response) => response.json())
+              //   .then((data) => {
+              //     // console.log(data);
+              //     setSearchResults([...searchResults, data?.results]);
+              //     console.log([...searchResults, data?.results])
+              //   })
+            }}
             numColumns={2}
             data={searchResults}
             renderItem={({ item }) => (
@@ -98,7 +113,7 @@ const SearchScreen = ({ navigation, route }) => {
                 </TouchableOpacity>
               </View>
             )}
-            keyExtractor={(item) => item?.id}
+            keyExtractor={(item, index) => index}
           />
         </View>
       </ScrollView>

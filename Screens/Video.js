@@ -4,8 +4,8 @@ import { StyleSheet, Dimensions } from "react-native";
 
 const Video = ({ route }) => {
   const { item, details, localValue, episode_number, seasonsNo, no } = route.params;
-  console.log(item)
-  console.log(no)
+  // console.log(item)
+  // console.log(no)
   // let webview = null;
   return (
     <>

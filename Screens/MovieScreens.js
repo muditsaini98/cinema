@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
+  Alert,
   Button,
   Dimensions,
   FlatList,
@@ -14,24 +15,24 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import arrayListContext from "../App"
+// import arrayListContext from "../App"
 
 const MovieScreens = ({ navigation, route }) => {
   const { item, image_base_url, base_URL, API_KEY } = route.params;
   // console.log(item)
 
-  const arrList = useContext(arrayListContext);
+  // const arrList = useContext(arrayListContext);
 
   const [details, setDetails] = useState([]);
   const [recoMovies, setRecoMovies] = useState([]);
   const [bookmark, setBookmark] = useState(false);
-  const [list, setList] = useState([]);
+  // const [tick, setTick] = useState(false);
   const movieDetail = `${base_URL}/movie/${item?.id}?api_key=${API_KEY}&language=en-US&page=1`;
   const tvDetail = `${base_URL}/tv/${item?.id}?api_key=${API_KEY}&language=en-US&page=1`;
   const recomendedMovies = `${base_URL}/movie/${item?.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1`;
   const recomendedTv = `${base_URL}/tv/${item?.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1`;
 
-  console.log(arrList)
+  // console.log(arrList)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -138,8 +139,43 @@ const MovieScreens = ({ navigation, route }) => {
     return `${hours}h${minutes > 0 ? ` ${minutes}m        ` : ""}`;
   }
 
+  useEffect(() => {
+    async function fetchData() {
+      if (await AsyncStorage.getItem('Bookmark_list') === null || await AsyncStorage.getItem('Bookmark_list') === undefined) {
+        await AsyncStorage.setItem('Bookmark_list', JSON.stringify([]));
+      }
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      const values = await AsyncStorage.getItem('Bookmark_list');
+      const arr = JSON.parse(values)
+      arr?.map(itemss => {
+        itemss?.id === item.id && setBookmark(true)
+      })
+    }
+    fetchData()
+  }, [])
+
+
+
   const onPressBookmark = async (item) => {
     setBookmark(!bookmark)
+    // AsyncStorage.removeItem("Bookmark_list")
+    if(!bookmark){
+      const value = await AsyncStorage.getItem('Bookmark_list');
+      const aa = [...JSON.parse(value), item]
+      const locValues = await AsyncStorage.setItem('Bookmark_list', JSON.stringify([...new Map(aa.map((m) => [m.id, m])).values()]));
+      // console.log(values)
+    }else{
+      const values = await AsyncStorage.getItem('Bookmark_list');
+      const arr = JSON.parse(values)
+      const bb = arr.filter((obj) => obj?.id !== item?.id);
+      // console.log(bb)
+      const locValues = await AsyncStorage.setItem('Bookmark_list', JSON.stringify(bb));
+    }
   }
 
   return (
@@ -225,10 +261,10 @@ const MovieScreens = ({ navigation, route }) => {
               tintColor={"white"}
               source={require("../assets/bookmark.png")}
             /> : <Image
-            style={{ width: 15, height: 20 }}
-            tintColor={"white"}
-            source={require("../assets/bookmark-full.png")}
-          />}
+              style={{ width: 15, height: 20 }}
+              tintColor={"white"}
+              source={require("../assets/bookmark-full.png")}
+            />}
           </Pressable>
         </View>
       </View>

@@ -20,12 +20,12 @@ const globalScreenOptions = {
   headerTintColor: "white",
 };
 
-const arrayListContext = React.createContext();
+// const arrayListContext = React.createContext();
 
 export default function App() {
-  const [arr, setArr] = useState([])
+  // const [arr, setArr] = useState([])
   return (
-    <arrayListContext.Provider value={[ arr, setArr ]}>
+    // <arrayListContext.Provider value={[ arr, setArr ]}>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
@@ -43,6 +43,6 @@ export default function App() {
         </Stack.Navigator>
         <StatusBar backgroundColor="black" style="light" />
       </NavigationContainer>
-    </arrayListContext.Provider>
+    // </arrayListContext.Provider>
   );
 }
