@@ -34,7 +34,7 @@ export default function HomeScreen({ navigation, route }) {
 
   useEffect(() => {
     //Get device Width
-    setWidth(Dimensions.get("window").width - 25);
+    setWidth(Dimensions.get("window").width);
   }, []);
 
   useEffect(() => {
@@ -99,16 +99,16 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   const goToFlim = () => {
-    navigation.push("Film", {image_base_url, base_URL, API_KEY})
+    navigation.push("Film", { image_base_url, base_URL, API_KEY })
   }
-  
+
   const goToSeries = () => {
-    navigation.push("Series", {image_base_url, base_URL, API_KEY})
-    
+    navigation.push("Series", { image_base_url, base_URL, API_KEY })
+
   }
-  
+
   const goToMyList = () => {
-    navigation.push("List", {image_base_url, base_URL, API_KEY})
+    navigation.push("List", { image_base_url, base_URL, API_KEY })
 
   }
 
@@ -120,22 +120,27 @@ export default function HomeScreen({ navigation, route }) {
       style={styles.container}
     >
       <View style={{ flexDirection: "row", maxWidth: Dimensions.get("window").width - 20, justifyContent: "space-evenly", paddingVertical: 10 }}>
-        <Pressable onPress={() => goToFlim()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>Film</Text></Pressable>
-        <Pressable onPress={() => goToSeries()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>Series</Text></Pressable>
+        <Pressable onPress={() => goToFlim()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>Movies</Text></Pressable>
+        <Pressable onPress={() => goToSeries()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>TV Shows</Text></Pressable>
         <Pressable onPress={() => goToMyList()} style={{ backgroundColor: "rgb(12, 20, 56)", padding: 6, borderRadius: 6, paddingHorizontal: 15 }}><Text style={{ color: "white", fontWeight: "600" }}>My List</Text></Pressable>
       </View>
-      <View>
+      <View style={{ justifyContent: "center" }}>
         {/* <Text style={{color: "white", fontSize: 20, fontWeight: "600", marginVertical: 5}}>Trending Now</Text> */}
         <FlatList
+          contentContainerStyle={{ justifyContent: "center" }}
+          // style={{borderWidth: 1, borderColor: "red"}}
+          snapToAlignment="center"
+          decelerationRate={"fast"}
+          snapToInterval={Dimensions.get("window").width}
           horizontal={true}
           data={movies}
           renderItem={({ item }) => (
-            <View style={[styles.grid, { width }]}>
-              <TouchableOpacity onPress={() => onPressFunction(item)}>
+            <View style={[styles.grid, { opacity: 0.7, alignSelf: "center", width }]}>
+              <TouchableOpacity style={{alignSelf: "center"}} activeOpacity={0.5} onPress={() => onPressFunction(item)}>
                 <Image
                   style={[
                     styles.img,
-                    { width, height: 450, resizeMode: "stretch" },
+                    { width: width - 20, height: 450, resizeMode: "stretch" },
                   ]}
                   source={{
                     uri: `${image_base_url}${item?.poster_path}`,
@@ -148,12 +153,14 @@ export default function HomeScreen({ navigation, route }) {
         />
       </View>
 
-      <NowPlay navigation={navigation} title="top action" genre="28" />
-      <NowPlay navigation={navigation} title="top Comedy" genre="35" />
-      <NowPlay navigation={navigation} title="top animation" genre="16" />
-      <NowPlay navigation={navigation} title="top sci-Fi" genre="878" />
-      <NowPlay navigation={navigation} title="top horror" genre="27" />
-      <NowPlay navigation={navigation} title="top romance" genre="10749" />
+      <NowPlay navigation={navigation} title="Top Action" genre="28" />
+      <NowPlay navigation={navigation} title="Top Comedy" genre="35" />
+      <NowPlay navigation={navigation} title="Top Animation" genre="16" />
+      <NowPlay navigation={navigation} title="Top Sci-Fi" genre="878" />
+      <NowPlay navigation={navigation} title="Top Horror" genre="27" />
+      <NowPlay navigation={navigation} title="Top Adventure" genre="12" />
+      <NowPlay navigation={navigation} title="Top Family" genre="10751" />
+      <NowPlay navigation={navigation} title="Top Romance" genre="10749" />
       {localValue && (
         <Modal
           animationType="slide"
@@ -257,13 +264,13 @@ const styles = StyleSheet.create({
     width: 160,
     resizeMode: "cover",
     height: 180,
-    borderRadius: 10,
+    borderRadius: 6,
     padding: 50,
   },
   grid: {
     flex: 1,
-    marginEnd: 10,
-    marginTop: 10,
+    // marginEnd: 10,
+    // marginTop: 10,
   },
   name: {
     color: "white",

@@ -353,7 +353,7 @@ const MovieScreens = ({ navigation, route }) => {
           textAlign: "left",
           fontSize: 22,
           borderBottomColor: "white",
-          borderWidth: 2,
+          borderWidth: 1,
           paddingTop: 25,
         }}
       >
@@ -378,7 +378,7 @@ const MovieScreens = ({ navigation, route }) => {
                 textAlign: "left",
                 fontSize: 22,
                 borderBottomColor: "white",
-                borderWidth: 2,
+                borderWidth: 1,
                 marginVertical: 5,
               }}
             >
@@ -391,7 +391,7 @@ const MovieScreens = ({ navigation, route }) => {
                 textAlign: "left",
                 fontSize: 22,
                 borderBottomColor: "white",
-                borderWidth: 2,
+                borderWidth: 1,
                 marginVertical: 5,
               }}
             >
@@ -402,10 +402,10 @@ const MovieScreens = ({ navigation, route }) => {
             horizontal={true}
             data={recoMovies}
             renderItem={({ item }) => (
-              <View style={[styles.grid, { width: 180 }]}>
+              <View style={[styles.grid, { width: 130 }]}>
                 <TouchableOpacity onPress={() => onPressFunction(item)}>
                   <Image
-                    style={[styles.img, { width: 180 }]}
+                    style={[styles.img, { width: 130 }]}
                     source={{
                       uri: `${image_base_url}${item?.poster_path}`,
                     }}
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     width: 200,
     resizeMode: "cover",
     height: 180,
-    borderRadius: 10,
+    borderRadius: 6,
     padding: 50,
   },
   white: {

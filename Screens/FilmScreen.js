@@ -13,16 +13,23 @@ const FilmScreen = ({ navigation, route }) => {
     const [film, setFilm] = useState([])
     useEffect(() => {
         async function fetchUrl() {
+            setPage(1)
             const aa = await fetch(filmListUrl)
                 .then((response) => response.json())
                 .then((data) => {
-                    setFilm([...film, ...data?.results]);
+                    setFilm(data?.results);
+                    // setFilm([...film, ...data?.results]);
+                    // console.log(cat)
                     // console.log(data)
                 });
             return aa;
         }
         fetchUrl();
-    }, [cat, page])
+    }, [cat])
+
+    const onPressSearch = () => {
+        navigation.navigate("Search", { base_URL, API_KEY, image_base_url });
+      };
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -53,19 +60,31 @@ const FilmScreen = ({ navigation, route }) => {
         navigation.push("Movie", { item, base_URL, API_KEY, image_base_url });
     }
 
+    const onPressCat = async (item) => {
+        setCat(item)
+        setPage(1)
+        // console.log(flatListRef)
+        await flatListRef?.current?.scrollToIndex({ animated: true, index: 0, viewPosition: 0 })
+        // await fetch(filmListUrl)
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         setFilm(data?.results);
+        //     });
+    }
+
 
     return (
         <View style={{ backgroundColor: "black", height: "100%" }}>
             <ScrollView horizontal style={{ maxHeight: 40, marginBottom: 10 }}>
-                <Pressable onPress={() => setCat("popular")} style={[styles.back, styles.margin]}>
-                    <Text style={[styles.white]}>Popular</Text>
-                </Pressable>
-                <Pressable onPress={() => setCat("top_rated")} style={[styles.back, styles.margin]}>
-                    <Text style={[styles.white]}>Top Rated</Text>
-                </Pressable>
-                <Pressable onPress={() => setCat("upcoming")} style={[styles.back, , styles.margin]}>
-                    <Text style={[styles.white]}>Upcoming</Text>
-                </Pressable>
+                <TouchableOpacity onPress={() => onPressCat("popular")} style={[styles.back, styles.margin]}>
+                    <Text style={[styles.white, {fontWeight: "600"}]}>Popular</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onPressCat("top_rated")} style={[styles.back, styles.margin]}>
+                    <Text style={[styles.white, {fontWeight: "600"}]}>Top Rated</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onPressCat("upcoming")} style={[styles.back, , styles.margin]}>
+                    <Text style={[styles.white, {fontWeight: "600"}]}>Upcoming</Text>
+                </TouchableOpacity>
             </ScrollView>
             {/* <ScrollView contentContainerStyle={{ alignItems: "center" }}>
                 {film?.map((item) => {
@@ -89,26 +108,41 @@ const FilmScreen = ({ navigation, route }) => {
                     )
                 })}
             </ScrollView> */}
-            <FlatList contentContainerStyle={{ alignItems: "center" }} data={film} keyExtractor={item => item.id}
-            ref={flatListRef}
+            <FlatList contentContainerStyle={{ alignItems: "stretch" }} style={{ marginHorizontal: 10 }} data={film} keyExtractor={(item, index) => index}
+                numColumns={2}
+                onEndReachedThreshold={0}
+                ref={flatListRef}
                 onEndReached={() => {
                     setPage(page + 1)
+                    async function fetchUrl() {
+                        const aa = await fetch(filmListUrl)
+                            .then((response) => response.json())
+                            .then((data) => {
+                                // setFilm(data?.results);
+                                const aa = [...new Map([...film, ...data?.results].map((m) => [m.id, m])).values()]
+                                setFilm(aa);
+                                // console.log(cat)
+                                // console.log(data)
+                            });
+                        return aa;
+                    }
+                    fetchUrl();
                     // flatListRef?.current?.scrollToIndex({ animated: true, index: 0, viewPosition: 0 })
                 }}
                 renderItem={({ item }) =>
-                    <View key={item?.id} style={{ width: Dimensions.get("window").width - 110, justifyContent: "center", marginVertical: 10 }}>
+                    <View key={item?.id} style={{ justifyContent: "flex-start", marginVertical: 10, width: "50%" }}>
                         <TouchableOpacity onPress={() => onPress(item)}>
-                            <View>
+                            <View style={{ alignItems: "center" }}>
                                 <Image
                                     style={[
                                         styles.img,
-                                        { height: 350, resizeMode: "stretch", borderRadius: 10 },
+                                        { height: 220, resizeMode: "stretch", borderRadius: 6, width: 150},
                                     ]}
                                     source={{
                                         uri: `${image_base_url}${item?.poster_path}`,
                                     }}
                                 />
-                                <Text style={{ color: "white", fontSize: 20, textAlign: "center", marginTop: 5, fontWeight: "600" }}>{item?.original_title || item?.title}</Text>
+                                <Text style={{ color: "white", fontSize: 14, fontWeight: "600", width: 120, textAlign: "center", marginTop: 5 }}>{item?.title || item?.original_title}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>} />

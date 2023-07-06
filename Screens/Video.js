@@ -17,8 +17,14 @@ const Video = ({ route }) => {
         scalesPageToFit={true}
         allowsFullscreenVideo={true}
         allowsInlineMediaPlayback={true}
+        // javaScriptCanOpenWindowsAutomatically={false}
+        // mixedContentMode="compatibility"
+        onShouldStartLoadWithRequest={(request) => {
+          // Only allow navigating within this website
+          return request.url.startsWith('https://www.2embed.to')
+        }}
         // source={{ uri: `https://vidsrc.me/embed/${item?.id}/` }}
-        source={{ uri: `https://www.2embed.to/embed/tmdb/movie?id=${item?.id || localValue?.id}` }}
+        source={{ uri: `https://embed.smashystream.com/playere.php?tmdb=${item?.id || localValue?.id}` }}
         incognito={true}
         onLoadEnd={() => {
           // console.log("error")
@@ -39,6 +45,12 @@ const Video = ({ route }) => {
         scalesPageToFit={true}
         allowsFullscreenVideo={true}
         allowsInlineMediaPlayback={true}
+        // javaScriptCanOpenWindowsAutomatically={false}
+        // mixedContentMode="compatibility"
+        // onShouldStartLoadWithRequest={(request) => {
+        //   // Only allow navigating within this website
+        //   return request.url.startsWith('https://vidsrc.me')
+        // }}
         source={{ uri: `https://vidsrc.me/embed/${item?.id}/` }}
         // source={{ uri: `https://www.2embed.to/embed/tmdb/movie?id=${item?.id || localValue?.id}` }}
         incognito={true}
@@ -61,6 +73,12 @@ const Video = ({ route }) => {
         scalesPageToFit={true}
         allowsFullscreenVideo={true}
         allowsInlineMediaPlayback={true}
+        // javaScriptCanOpenWindowsAutomatically={false}
+        // mixedContentMode="compatibility"
+        onShouldStartLoadWithRequest={(request) => {
+          // Only allow navigating within this website
+          return request.url.startsWith('https://www.2embed.to')
+        }}
         onLoadEnd={() => {
           // console.log("error")
           window.onbeforeunload = function () {
@@ -71,32 +89,39 @@ const Video = ({ route }) => {
           }
         }}
         // source={{ uri: `https://vidsrc.me/embed/${item?.id}/` }}
-        source={{ uri: `https://www.2embed.to/embed/tmdb/tv?id=${item?.id || localValue?.id}&s=${seasonsNo}&e=${episode_number}` }}
+        source={{ uri: `https://embed.smashystream.com/playere.php?tmdb=${item?.id || localValue?.id}&season=${seasonsNo}&episode=${episode_number}` }}
+        // source={{ uri: `https://www.2embed.to/embed/tmdb/tv?id=${item?.id || localValue?.id}&s=${seasonsNo}&e=${episode_number}` }}
         incognito={true}
         mediaPlaybackRequiresUserAction={false}
       /> : <WebView
-      style={styles.video}
-      // ref={(ref) => {
-      //   webview = ref;
-      // }}
-      scalesPageToFit={true}
-      allowsFullscreenVideo={true}
-      allowsInlineMediaPlayback={true}
-      onLoadEnd={() => {
-        // console.log("error")
-        window.onbeforeunload = function () {
-          return;
-        }
-        window.onunload = function () {
-          return;
-        }
-      }}
-      // source={{ uri: `https://vidsrc.me/embed/${item?.id}/` }}
-      source={{ uri: `https://vidsrc.me/embed/${item?.id}/${seasonsNo}-${episode_number}/` }}
-      // source={{ uri: `https://www.2embed.to/embed/tmdb/tv?id=${item?.id || localValue?.id}&s=${seasonsNo}&e=${episode_number}` }}
-      incognito={true}
-      mediaPlaybackRequiresUserAction={false}
-    />}
+        style={styles.video}
+        // ref={(ref) => {
+        //   webview = ref;
+        // }}
+        scalesPageToFit={true}
+        allowsFullscreenVideo={true}
+        allowsInlineMediaPlayback={true}
+        // javaScriptCanOpenWindowsAutomatically={false}
+        // mixedContentMode="compatibility"
+        // onShouldStartLoadWithRequest={(request) => {
+        //   // Only allow navigating within this website
+        //   return request.url.startsWith('https://vidsrc.me')
+        // }}
+        onLoadEnd={() => {
+          // console.log("error")
+          window.onbeforeunload = function () {
+            return;
+          }
+          window.onunload = function () {
+            return;
+          }
+        }}
+        // source={{ uri: `https://vidsrc.me/embed/${item?.id}/` }}
+        source={{ uri: `https://vidsrc.me/embed/${item?.id}/${seasonsNo}-${episode_number}/` }}
+        // source={{ uri: `https://www.2embed.to/embed/tmdb/tv?id=${item?.id || localValue?.id}&s=${seasonsNo}&e=${episode_number}` }}
+        incognito={true}
+        mediaPlaybackRequiresUserAction={false}
+      />}
     </>
   );
 };

@@ -12,7 +12,7 @@ const ServerScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 16, padding: 5, color: "gray" }}>If one server doesn't work, choose another.</Text>
             <TouchableHighlight activeOpacity={0.5} style={{ backgroundColor: "rgb(100, 100, 100)", borderColor: "white", borderRadius: 5, padding: 10, paddingHorizontal: 20, marginVertical: 20 }} onPress={() => selectServer(2)}>
                 <View style={{minWidth : 150}}>
-                    <Text style={{ color: "white" }}>VidCLoud</Text>
+                    <Text style={{ color: "white" }}>Smashystream</Text>
                     <Text style={{ fontSize: 12, color: "lightgray", paddingTop: 5 }}>Recommended, lesser ads.</Text>
                 </View>
             </TouchableHighlight>

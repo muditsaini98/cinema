@@ -11,6 +11,7 @@ import SeriesScreen from "./Screens/SeriesScreen";
 import FilmScreen from "./Screens/FilmScreen";
 import MyListScreen from "./Screens/MyListScreen";
 import React, { useState } from "react"
+import ViewAllScreen from "./Screens/ViewAllScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ export default function App() {
           <Stack.Screen name="Series" component={SeriesScreen} />
           <Stack.Screen name="Film" component={FilmScreen} />
           <Stack.Screen name="List" component={MyListScreen} />
+          <Stack.Screen name="View All" component={ViewAllScreen} />
         </Stack.Navigator>
         <StatusBar backgroundColor="black" style="light" />
       </NavigationContainer>

@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Pressable,
 } from "react-native";
 
 const NowPlay = ({ title, genre, navigation }) => {
@@ -34,17 +35,19 @@ const NowPlay = ({ title, genre, navigation }) => {
 
   return (
     <View>
-      <View style={{justifyContent: "space-between"}}>
-        <Text style={[styles.upper, styles.title, { marginTop: 20 }]}>
+      <View style={{ justifyContent: "space-between", marginTop: 20, flexDirection: "row", alignItems: "center" }}>
+        <Text style={[styles.upper, styles.title, {}]}>
           {title}
         </Text>
-        <Text style={{color: "white"}}>View all</Text>
+        <Pressable onPress={() => navigation.push("View All", {image_base_url, base_URL, API_KEY, title, genre})}>
+          <Text style={{ color: "white", textAlign: "center", fontSize: 13,fontWeight: "600"}}>View All</Text>
+        </Pressable>
       </View>
       <FlatList
         horizontal={true}
         data={actionMovies}
         renderItem={({ item }) => (
-          <View style={[styles.grid, { width: 160 }]}>
+          <View style={[styles.grid, { width: 120 }]}>
             <TouchableOpacity onPress={() => onPressFunction(item)}>
               <Image
                 style={styles.img}
@@ -52,11 +55,11 @@ const NowPlay = ({ title, genre, navigation }) => {
                   uri: `${image_base_url}${item?.poster_path}`,
                 }}
               />
-              {item.name ? (
+              {/* {item.name ? (
                 <Text style={styles.name}>{item?.name}</Text>
               ) : (
                 <Text style={styles.name}>{item?.title}</Text>
-              )}
+              )} */}
             </TouchableOpacity>
           </View>
         )}
@@ -73,16 +76,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   img: {
-    width: 160,
-    resizeMode: "cover",
-    height: 180,
-    borderRadius: 10,
-    padding: 50,
+    width: 112,
+    resizeMode: "contain",
+    height: 168,
+    borderRadius: 6,
+    padding: 40,
   },
   grid: {
     flex: 1,
-    marginEnd: 10,
-    marginTop: 10,
+    // marginEnd: 0,
+    marginTop: 5,
   },
   name: {
     color: "white",
